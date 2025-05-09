@@ -1,0 +1,26 @@
+ID_Usuário,Sistema_Operacional,Nível_de_Satisfação,Cursos_Concluídos,Tempo_Médio_Acesso (h/dia),Sexo,Idade,Área_de_Interesse,Avaliação_Final (0-10),Ativo_no_Mês,Dispositivo_Principal,Tipo_de_Conexão,Estado,Qtd_Acessos_Semana,Horas_Total_Plataforma
+001,MacOS,Neutro,3,"1,9",Outro,22,Inteligência Artificial,"4,6",Não,Notebook,5G,PR,3,"107,2"
+002,Windows,Satisfeito,3,"1,7",Masculino,27,Inteligência Artificial,"5,9",Não,Notebook,Wi-Fi,SC,2,"40,3"
+003,iOS,Insatisfeito,8,"2,9",Masculino,19,Redes,"5,2",Não,Notebook,5G,MG,17,"115,5"
+004,iOS,Satisfeito,6,"2,8",Outro,34,Dados,"5,5",Não,Smartphone,Cabo,BA,18,"17,3"
+005,Linux,Satisfeito,8,"1,1",Masculino,21,Desenvolvimento,"9,1",Não,Notebook,4G,SP,15,"114,2"
+006,Linux,Satisfeito,5,"1,6",Outro,30,Dados,"5,7",Sim,Smartphone,Wi-Fi,SC,3,"52,6"
+007,iOS,Muito satisfeito,9,"0,5",Outro,25,Redes,"9,7",Sim,Notebook,Wi-Fi,BA,6,28
+008,Android,Muito satisfeito,1,"2,2",Masculino,23,Segurança,"8,1",Sim,Smartphone,5G,PE,11,"17,6"
+009,Windows,Neutro,1,"2,1",Masculino,41,Desenvolvimento,"5,7",Sim,Tablet,5G,SP,2,"66,8"
+010,iOS,Muito satisfeito,0,"0,4",Masculino,28,Segurança,"6,3",Sim,Smartphone,4G,MG,3,"113,6"
+011,Linux,Insatisfeito,8,"0,5",Feminino,35,Design,"9,2",Sim,Smartphone,Cabo,SP,12,"82,2"
+012,Linux,Satisfeito,6,"1,7",Masculino,29,Desenvolvimento,"7,2",Não,Tablet,Cabo,MG,10,"61,7"
+013,MacOS,Insatisfeito,8,"1,7",Outro,24,Desenvolvimento,"8,5",Sim,Tablet,Wi-Fi,RS,6,45
+014,Linux,Satisfeito,1,"0,8",Masculino,20,Dados,"5,8",Sim,Notebook,4G,RS,9,"34,9"
+015,iOS,Neutro,9,"2,9",Outro,33,Inteligência Artificial,"5,8",Sim,Smartphone,Wi-Fi,SP,4,90
+016,Android,Muito insatisfeito,9,"1,3",Masculino,45,Design,"9,2",Sim,Desktop,5G,PR,7,"99,1"
+017,MacOS,Muito insatisfeito,5,"2,6",Feminino,26,Segurança,"8,8",Sim,Notebook,4G,MG,14,"119,2"
+018,iOS,Satisfeito,1,"2,8",Feminino,31,Inteligência Artificial,"5,1",Sim,Notebook,4G,RS,1,"103,2"
+019,Android,Neutro,10,"2,5",Masculino,38,Redes,"9,3",Não,Notebook,Wi-Fi,PR,1,"82,7"
+020,Android,Satisfeito,0,"0,5",Masculino,22,Inteligência Artificial,"6,4",Não,Smartphone,Cabo,RS,2,"44,9"
+021,Linux,Muito insatisfeito,2,"2,1",Feminino,44,Dados,5,Não,Desktop,4G,RJ,10,16
+022,Linux,Neutro,2,"1,7",Masculino,36,Inteligência Artificial,"8,5",Não,Smartphone,5G,BA,2,"78,9"
+023,MacOS,Neutro,9,"2,9",Outro,40,Design,"5,6",Não,Smartphone,Cabo,RJ,13,"101,9"
+024,Windows,Neutro,2,"2,9",Feminino,39,Desenvolvimento,"7,1",Sim,Smartphone,4G,RJ,8,"58,1"
+025,Android,Muito satisfeito,4,"2,2",Outro,32,Desenvolvimento,"4,8",Não,Desktop,Wi-Fi,BA,19,"49,9"
