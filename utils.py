@@ -22,7 +22,25 @@ def classify_variable(col_data):
     if is_numeric:
         return "Quantitativa Contínua" if n_unique > 10 else "Quantitativa Discreta"
     
-    return "Qualitativa Nominal" if n_unique > 2 else "Qualitativa Ordinal"
+        # Lista de palavras-chave indicativas de ordem
+    ordinal_keywords = ["nível", "grau", "satisfação", "avaliação", "classificação", "etapa"]
+
+    # Conjunto de categorias com ordem conhecida (exemplo geral)
+    known_ordinal_values = {
+        "nível_de_satisfação": ["Insatisfeito", "Neutro", "Satisfeito"],
+        "avaliação_final (0-10)": None  # se categorizada por faixas, poderia ser ordinal
+    }
+
+    # Verifica por nome da coluna
+    if any(word in col_name.lower() for word in ordinal_keywords):
+        return "Qualitativa Ordinal"
+    
+    # Verifica por valores típicos de ordem
+    unique_vals = [str(val).lower() for val in col_data.unique()]
+    if any(val in ["baixo", "médio", "alto", "insatisfeito", "neutro", "satisfeito"] for val in unique_vals):
+        return "Qualitativa Ordinal"
+
+    return "Qualitativa Nominal"
 
 def calculate_frequencies(col_data, var_type):
     """
