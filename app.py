@@ -52,6 +52,8 @@ def main():
     else:
         # Carrega e exibe dados
         df = pd.read_csv(uploaded_file, decimal=",")
+    
+    df = df.iloc[:, 1:]
         
     data_preview(df)
     
@@ -88,7 +90,7 @@ def main():
         # Tab 3: Análise Estatística
         with tab_stats:
             if var_type.startswith("Quantitativa"):
-                show_statistical_analysis(col_data)
+                show_statistical_analysis(col_data, col)
             else:
                 st.warning("Análise estatística disponível apenas pra variáveis quantitativas")
 
@@ -96,10 +98,12 @@ def main():
 # FUNÇÕES AUXILIARES
 # ==============================================
 
-def show_statistical_analysis(col_data):
+def show_statistical_analysis(col_data, col_name):
+
     """
     Exibe as estatísticas em tabelas simples no Streamlit com dados centralizados e cabeçalho colorido
     """
+
     stats = calculate_statistics(col_data)
     
     # Tabela de Medidas de Posição
@@ -108,6 +112,7 @@ def show_statistical_analysis(col_data):
         orient='index', 
         columns=['Valor']
     )
+
     df_posicao.index.name = 'Medidas de Posição'
     
     # Estilizando a tabela de Medidas de Posição
@@ -120,11 +125,40 @@ def show_statistical_analysis(col_data):
         orient='index', 
         columns=['Valor']
     )
+
     df_dispersao.index.name = 'Medidas de Dispersão'
     
     # Estilizando a tabela de Medidas de Dispersão
     df_dispersao_styled = df_dispersao.style.set_properties(**{'text-align': 'center'})
     st.dataframe(df_dispersao_styled)
+
+    interpret_statistics(stats, col_name)
+
+def interpret_statistics(stats, col_name):
+    media = stats["Medidas de Posição"].get("Média", None)
+    mediana = stats["Medidas de Posição"].get("Mediana", None)
+    moda = stats["Medidas de Posição"].get("Moda", None)
+    desvio = stats["Medidas de Dispersão"].get("Desvio Padrão", None)
+    amplitude = stats["Medidas de Dispersão"].get("Amplitude", None)
+
+    st.markdown("### 🧠 Interpretação dos Dados")
+    
+    if media and mediana:
+        if abs(media - mediana) < 0.1 * media:
+            st.write(f"A média e a mediana da variável **{col_name}** são próximas ({media:.2f} e {mediana:.2f}), indicando uma distribuição aproximadamente simétrica.")
+        elif media > mediana:
+            st.write(f"A média ({media:.2f}) é maior que a mediana ({mediana:.2f}), sugerindo que a distribuição da variável **{col_name}** pode estar **assimétrica à direita**.")
+        else:
+            st.write(f"A média ({media:.2f}) é menor que a mediana ({mediana:.2f}), sugerindo que a distribuição da variável **{col_name}** pode estar **assimétrica à esquerda**.")
+
+    if desvio:
+        st.write(f"O desvio padrão é de **{desvio:.2f}**, o que indica o grau de dispersão dos dados em relação à média.")
+
+    if amplitude:
+        st.write(f"A amplitude total dos dados é de **{amplitude:.2f}**, representando a diferença entre o maior e o menor valor observado.")
+    
+    if moda is not None:
+        st.write(f"A moda dos dados é **{moda}**, ou seja, o valor que ocorre com mais frequência na variável **{col_name}**.")
 
 # ==============================================
 # EXECUÇÃO
