@@ -1,6 +1,8 @@
+
 import streamlit as st
-import pandas as pd
 import plotly.express as px
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
 
 # ==============================================
 # CSS GLOBAL
@@ -226,9 +228,28 @@ def create_analysis_tabs():
 # COMPONENTES GRÁFICOS
 # ==============================================
 
+import streamlit as st
+import plotly.express as px
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
+
 def plot_distribution(plot_info, col_name):
-    """Gráfico de distribuição interativo com tema escuro e legenda"""
+    """
+    Gera um gráfico de distribuição interativo com tema escuro.
+    Para variáveis quantitativas, usa histograma com classes calculadas.
     
+    Args:
+        plot_info (dict): Dicionário contendo:
+            - 'var_type': Tipo da variável (ex: "Qualitativa Nominal", "Quantitativa Contínua")
+            - 'plot_data': Dados para plotagem (pd.Series)
+            - 'freq_table': Tabela de frequências (para quantitativas)
+            - 'bins': Intervalos dos bins (para quantitativas)
+        col_name (str): Nome da coluna/variável
+    """
+    
+    # =============================================
+    # Configurações de estilo
+    # =============================================
     container_style = """
     <style>
     .plot-container {
@@ -240,12 +261,12 @@ def plot_distribution(plot_info, col_name):
     }
     </style>
     """
-    
     st.markdown(container_style, unsafe_allow_html=True)
     
+    # =============================================
+    # Variáveis Qualitativas
+    # =============================================
     if plot_info['var_type'].startswith("Qualitativa"):
-
-        # Código para variáveis qualitativas
         df_counts = plot_info['plot_data'].value_counts().reset_index()
         df_counts.columns = [col_name, "Frequência"]
         
@@ -256,53 +277,96 @@ def plot_distribution(plot_info, col_name):
             title=f"Distribuição de {col_name}",
             color=col_name,
             color_discrete_sequence=px.colors.qualitative.Dark24,
-            category_orders={col_name: plot_info['formatted_labels']}
+            template='plotly_dark'
         )
+        
+        fig.update_layout(
+            xaxis_title=col_name,
+            yaxis_title="Contagem",
+            showlegend=False
+        )
+        
+    # =============================================
+    # Variáveis Quantitativas
+    # =============================================
     else:
-        # Variáveis quantitativas (usando as classes da tabela de frequência)
-        freq_table = plot_info['freq_table'].drop('Total', errors='ignore')
         
-        # Criar um DataFrame com os intervalos e frequências
-        df_classes = pd.DataFrame({
-            'Intervalo': plot_info['formatted_labels'],
-            'Frequência': freq_table['Frequência Absoluta']
-        })
+        # Preparar dados
+        frequencias = plot_info['freq_table']['Frequência Absoluta'].iloc[:-1].values
+        bins = plot_info['bins']
+        data = plot_info['plot_data']
         
-        fig = px.bar(
-            df_classes,
-            x='Intervalo',
-            y='Frequência',
-            title=f"Distribuição de {col_name} (por classes)",
-            color='Intervalo',
-            color_discrete_sequence=['#00CC96'],
-            category_orders={'Intervalo': plot_info['formatted_labels']}
-        )
-        
-        # Adicionar boxplot marginal apenas se for contínua
-        if plot_info['var_type'].endswith("contínua"):
-            fig_box = px.box(
-                plot_info['plot_data'],
-                points=False,
-                color_discrete_sequence=['#00CC96']
+        # Criar figura com subplots se for contínua
+        if plot_info['var_type'].endswith("Contínua"):
+
+            fig = make_subplots(
+                rows=2, cols=1,
+                shared_xaxes=True,
+                vertical_spacing=0.05,
+                row_heights=[0.7, 0.3]
             )
-            fig_box.update_traces(showlegend=False)
-            fig.add_trace(fig_box.data[0])
+            
+            # Adicionar histograma
+            fig.add_trace(
+                go.Bar(
+                    x=[(bins[i] + bins[i+1])/2 for i in range(len(bins)-1)],
+                    y=frequencias,
+                    width=[bins[i+1] - bins[i] for i in range(len(bins)-1)],
+                    marker_color='#636EFA',
+                    marker_line_color='black',
+                    marker_line_width=1,
+                    opacity=0.8,
+                    name='Frequência'
+                ),
+                row=1, col=1
+            )
+            
+            # Adicionar boxplot
+            fig.add_trace(
+                go.Box(
+                    x=data,
+                    name='Distribuição',
+                    marker_color='#00CC96',
+                    boxpoints=False
+                ),
+                row=2, col=1
+            )
+            
+            fig.update_layout(
+                title=f"Distribuição de {col_name}",
+                height=600
+            )
+            
+        else:  # Discreta
+            fig = go.Figure()
+            fig.add_trace(
+                go.Bar(
+                    x=[(bins[i] + bins[i+1])/2 for i in range(len(bins)-1)],
+                    y=frequencias,
+                    width=[bins[i+1] - bins[i] for i in range(len(bins)-1)],
+                    marker_color='#636EFA',
+                    marker_line_color='black',
+                    marker_line_width=1,
+                    opacity=0.8,
+                    name='Frequência'
+                )
+            )
+            
+            fig.update_layout(
+                title=f"Distribuição de {col_name}",
+                xaxis_title=col_name,
+                yaxis_title="Frequência"
+            )
     
-    # Estilo do layout com fundo escuro (mantido igual)
+    # =============================================
+    # Configurações comuns e exibição
+    # =============================================
     fig.update_layout(
-        height=500,
-        plot_bgcolor='#111111',
-        paper_bgcolor='#111111',
+        template='plotly_dark',
+        plot_bgcolor='rgba(0,0,0,0)',
+        paper_bgcolor='rgba(0,0,0,0)',
         font=dict(color='white'),
-        legend=dict(
-            orientation="h",
-            yanchor="bottom",
-            y=1.02,
-            xanchor="right",
-            x=1
-        ),
-        xaxis_title=col_name,
-        yaxis_title="Frequência"
+        margin=dict(l=20, r=20, t=60, b=20)
     )
     
     with st.container():
